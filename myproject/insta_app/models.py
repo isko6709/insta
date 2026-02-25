@@ -72,6 +72,10 @@ class CommentLike(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('comment', 'user')
+
+
 class Favorite(models.Model):
     user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, related_name='favorite_folder')
 
@@ -79,3 +83,17 @@ class FavoriteItem(models.Model):
     favorite = models.ForeignKey(Favorite, related_name='items', on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     added_at = models.DateTimeField(auto_now_add=True)
+
+
+class Chat(models.Model):
+    person = models.ManyToManyField(UserProfile, blank=True)
+    created_date = models.DateField(auto_now_add=True)
+
+
+class Message(models.Model):
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
+    author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    text = models.TextField()
+    image = models.ImageField(upload_to='images', null=True, blank=True)
+    video = models.FileField(upload_to='videos', null=True, blank=True)
+    created_date = models.DateTimeField(auto_now_add=True)

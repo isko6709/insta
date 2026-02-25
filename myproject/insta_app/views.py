@@ -31,7 +31,11 @@ class LogoutView(APIView):
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+    def get_queryset(self):
+        return UserProfile.objects.filter(user=self.request.user.id)
+
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
